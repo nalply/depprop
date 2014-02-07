@@ -54,7 +54,7 @@ defineDepProperty = function(object, name, options) {
 
   var strict = options.changeModus == 'strict'
   var equal = options.changeModus == 'equal'
-  if (!strictEqual && !equal) options.changeWhenEqual = 'always'
+  if (!strict && !equal) options.changeWhenEqual = 'always'
 
   var storeKey = options.storeKey
   if (!object[storeKey]) defineReadOnlyGetter(object, storeKey, {})
@@ -70,8 +70,8 @@ defineDepProperty = function(object, name, options) {
 
   // Create property for non-reactive access
   Object.defineProperty(object, name, {
-    enumerable: enumerable, 
-    configurable: configurable,
+    enumerable: options.enumerable, 
+    configurable: options.configurable,
     get: function() {
       if (options.onGet(false, store.value, object, name, options))
         return store.value
@@ -101,7 +101,7 @@ defineDepProperty = function(object, name, options) {
     set: function(value) {
       if (options.onSet(true, store.value, object, name, options)) {
         store.value = value
-        if (strictEqual && store.value === value) return
+        if (strict && store.value === value) return
         if (equal && store.value == value) return
         store.dep.changed()
       }
