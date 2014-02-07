@@ -1,0 +1,8 @@
+{
+  "name": "depprop",
+  "description": "Dependent JavaScript Properties",
+  "author": "Daniel Ly",
+  "version": "0.0",
+  "git": "https://github.com/nalply/depprop.git",
+  "packages": {}
+}
