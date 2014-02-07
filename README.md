@@ -8,7 +8,7 @@ Reactivity can be hard to debug. It helps if one sees immediately where reactive
 
 ###Status
 
-Alpha. No tests.
+Alpha. No tests. Currently testing Atmosphere.
 
 Example:
 
