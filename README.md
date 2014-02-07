@@ -1,6 +1,10 @@
 #Dependent Javascript properties
 
-Define dependent JavaScript properties for Meteor. It's like Sessions. Create a property on an object. It is reactive if you use the prefix (the dollar sign), but it is not if you omit the prefix. `object.$prop` is reactive, and `object.prop` is the same value, but the access is not reactive.
+Define dependent JavaScript properties for Meteor. It's like Sessions.
+
+The property is reactive if you use the prefix (the dollar sign), but it is not if you omit the prefix. `object.$prop` is reactive, and `object.prop` is the same but non-reactive.
+
+Reactivity can be hard to debug. It helps if one sees immediately where reactive accesses happen. The prefix is conspicuous and indicates reactive accesses easily. See below to use a different prefix.
 
 ###Status
 
@@ -46,8 +50,7 @@ Console output:
     Second autorun 41 40
 
 You can use a different prefix by passing an object as a third parameter to
-`defineDepProperty()` with key `reactivePrefix` and the prefix you prefer
-instead.
+`defineDepProperty()` with an option `reactivePrefix`.
 
 Example:
 
@@ -55,10 +58,11 @@ Example:
     object.reactive_c = 'gamma'
 
 
-Read-only getter
-================
+##Read-only getter
 
-Dependent properties internally use read-only getters. Example:
+Dependent properties internally use read-only getters. 
+
+Usage example:
 
     var object = {}
     defineGetter(object, 'tau', Math.PI * 2)
