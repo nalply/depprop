@@ -1,61 +1,71 @@
 #Dependent Javascript properties
 
+###Status
+
+Beta. Tests not complete.
+
+###Introduction
+
 Define dependent JavaScript properties for Meteor. It's like Sessions.
 
-The property is reactive if you use the prefix (the dollar sign), but it is not if you omit the prefix. `object.$prop` is reactive, and `object.prop` is the same but non-reactive.
+The property is reactive if you use the prefix (the dollar sign), but it is not if you omit the prefix. `obj.$prop` is reactive, and `obj.prop` is the same but non-reactive.
 
 Reactivity can be hard to debug. It helps if one sees immediately where reactive accesses happen. The prefix is conspicuous and indicates reactive accesses easily. See below to use a different prefix.
 
-###Status
+###Examples
 
-Alpha. No tests. Currently testing Atmosphere.
+Define a dependent property `a` with the value `alpha` then reactively set it to `alpha2`.
 
-Example:
-
-    var object = {}
-    defineDepProperty(object, 'a')
-    object.a = "alpha"
-    Deps.autorun(function() { console.log("First autorun", object.$a) })
-    object.$a = "alpha 2"
-
- Console output:
-
-    First autorun alpha
-    First autorun alpha2
-
-Example continued:
-
-    defineDepProperty(object, 'b')
-    object.b = 42
-    Deps.autorun(function() { 
-      object.$a = object.$b + 1 
-      console.log("Second autorun", object.a, object.b)
+    var obj = {}
+    Object.defineDepProperty(obj, 'a')
+    obj.a = "alpha"
+    Deps.autorun(function(c) {
+      console.log("Autorun 1", c.firstRun ? 'first run' : 'rerun', obj.$a) 
     })
-    object.$b = 41
+    obj.$a = "alpha 2"
 
-Console output:
+Output
 
-    Second autorun 43 42
-    First autorun 43
-    Second autorun 42 41
-    First autorun 42
+    Autorun 1 first run alpha
+    Autorun 1 rerun alpha2
 
-Example continued:
+Define a dependent property `b` and an autorun where the dependent property `a` is set from `b`. This means, when one assigns `b`, the first autorun should also be rerun.
 
-    object.a = 41
-    object.$b = 40
+    Object.defineDepProperty(obj, 'b')
+    obj.b = 42
+    Deps.autorun(function(c) { 
+      obj.$a = obj.$b + 1 
+      console.log("Autorun 2", c.firstRun ? 'first run' : 'rerun', obj.a, obj.b)
+    })
+    obj.$b = 41
 
-Console output:
+Output
+
+    Autorun 2 first run 43 42
+    Autorun 1 rerun 43
+    Autorun 2 rerun 42 41
+    Autorun 1 rerun 42
+
+Show the difference between setting non-reactively and reactively.
+
+    obj.a = 41
+    obj.$b = 40
+
+Output
 
     Second autorun 41 40
+
+
+
+###Different reactive prefix
 
 You can use a different prefix by passing an object as a third parameter to
 `defineDepProperty()` with an option `reactivePrefix`.
 
-Example:
+Example
 
-    defineDepProperty(object, 'c', {reactivePrefix: 'reactive_'})
-    object.reactive_c = 'gamma'
+    defineDepProperty(obj, 'c', {reactivePrefix: 'reactive_'})
+    obj.reactive_c = 'gamma'
 
 
 ##Read-only getter
@@ -64,8 +74,8 @@ Dependent properties internally use read-only getters.
 
 Usage example:
 
-    var object = {}
-    defineGetter(object, 'tau', Math.PI * 2)
-    defineGetter(object, 'now', function() { return +new Date })
-    console.log(object.tau) // 6.283185307179586
-    console.log(object.now) // The current time in ms since epoch
+    var obj = {}
+    Object.defineReadOnlyGetter(obj, 'tau', Math.PI * 2)
+    Object.defineReadOnlyGetter(obj, 'now', function() { return +new Date })
+    console.log(obj.tau) // 6.283185307179586
+    console.log(obj.now) // The current time in ms since epoch
