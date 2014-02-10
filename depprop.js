@@ -114,8 +114,8 @@ Object.defineDepProperty = function(obj, name, options) {
     },
     set: function(value) {
       if (options.onSet(true, store.value, obj, name, options)) {
-        store.value = value
         if (equals(store.value, value)) return
+        store.value = value
         store.dep.changed()
       }
     },
