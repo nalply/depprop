@@ -6,56 +6,43 @@ Beta. Tests not complete.
 
 ###Introduction
 
-Define dependent JavaScript properties for Meteor. It's like Sessions.
+Define dependent Javascript properties for Meteor. See MDN [Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty). Dependent properties are reactive like `Session` or `ReactiveDict`. Reactivity is marked by a prefix in the property name. 
 
-The property is reactive if you use the prefix (the dollar sign), but it is not if you omit the prefix. `obj.$prop` is reactive, and `obj.prop` is the same but non-reactive.
+###What is reactive programming?
 
-Reactivity can be hard to debug. It helps if one sees immediately where reactive accesses happen. The prefix is conspicuous and indicates reactive accesses easily. See below to use a different prefix.
+Reactive programming is one of the more subtle and brilliant concepts of Meteor. It's well explained in the documentation section [Reactivity](https://docs.meteor.com/#reactivity). To give a short summary here: When you retrieve something reactive in a reactive context it is rerun whenever the context gets invalidated. By setting something reactive you can invalidate all it dependent contexts. This happens if you reactively assign to a dependent property with a different value.
+
+###The convention with the prefix
+
+Reactivity can be hard to debug. It helps if code is both concise and obvious about reactivity. To make reactivity obvious a convention to indicate reactivity in properties is proposed. The convention is using a prefix (by default the dollar sign). If the property is prepended with the prefix the access is reactive. For example `obj.$prop` is reactive, and `obj.prop` is not, and both accesses use the same property value.
 
 ###Examples
 
-Define a dependent property `a` with the value `alpha` then reactively set it to `alpha2`.
+Define a dependent property `a` with the value `alpha` then reactively set it to `alpha2`. Declare a reactive context with `Deps.autorun()` and let it print the current value. Note that the property get in the context must be reactive. This is indicated by the prefix `$`.
 
     var obj = {}
     Object.defineDepProperty(obj, 'a')
     obj.a = "alpha"
     Deps.autorun(function(c) {
-      console.log("Autorun 1", c.firstRun ? 'first run' : 'rerun', obj.$a) 
+      console.log("Autorun", c.firstRun ? 'first run' : 'rerun', obj.$a) 
     })
     obj.$a = "alpha 2"
 
 Output
 
-    Autorun 1 first run alpha
-    Autorun 1 rerun alpha2
+    Autorun first run alpha
+    Autorun rerun alpha2
 
-Define a dependent property `b` and an autorun where the dependent property `a` is set from `b`. This means, when one assigns `b`, the first autorun should also be rerun.
+Assign `a` non-reactively and output the value.
 
-    Object.defineDepProperty(obj, 'b')
-    obj.b = 42
-    Deps.autorun(function(c) { 
-      obj.$a = obj.$b + 1 
-      console.log("Autorun 2", c.firstRun ? 'first run' : 'rerun', obj.a, obj.b)
-    })
-    obj.$b = 41
+    obj.a = "alpha 3"
+    console.log("a", obj.a)
 
 Output
 
-    Autorun 2 first run 43 42
-    Autorun 1 rerun 43
-    Autorun 2 rerun 42 41
-    Autorun 1 rerun 42
+    a alpha3
 
-Show the difference between setting non-reactively and reactively.
-
-    obj.a = 41
-    obj.$b = 40
-
-Output
-
-    Second autorun 41 40
-
-
+Note that the autorun has not been rerun.
 
 ###Different reactive prefix
 
@@ -70,7 +57,7 @@ Example
 
 ##Read-only getter
 
-Dependent properties internally use read-only getters. 
+Dependent properties internally use read-only getters. Because they are useful they are also included. You can give a value or a function to calculate a value on each get.
 
 Usage example:
 
