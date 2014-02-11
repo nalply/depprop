@@ -37,7 +37,8 @@ Object.defineReadOnlyGetter = function(obj, name, functionOrValue) {
 //     object, name and options are the same parameters as defineDepProperty()
 //     except that options is initialized to contain default values if omitted.
 //   onSet: A callback with signature (reactive, oldValue, newValue, object,
-//     name, options) invoked before each set.
+//     name, options) invoked before each set. Same signature as get, but with
+//     an additional parameter to provide the new value to be set.
 //   storeKey: The name of the store to contain the dependencies and the
 //     property values. Default is '!depPopertyStore'.
 Object.defineDepProperty = function(obj, name, options) {
@@ -103,7 +104,7 @@ Object.defineDepProperty = function(obj, name, options) {
     prefix = ''
   }
 
-  Object.defineProperty(obj, options.reactivePrefix + name, {
+  Object.defineProperty(obj, prefix + name, {
     enumerable: options.enumerable, 
     configurable: options.configurable,
     get: function() {
@@ -113,7 +114,7 @@ Object.defineDepProperty = function(obj, name, options) {
       }
     },
     set: function(value) {
-      if (options.onSet(true, store.value, obj, name, options)) {
+      if (options.onSet(true, store.value, value, obj, name, options)) {
         if (equals(store.value, value)) return
         store.value = value
         store.dep.changed()

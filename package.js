@@ -3,9 +3,9 @@ Package.describe({
 })
 
 Package.on_use(function(api) {
-  api.use('deps', 'client')
+  api.use('deps')
 
-  api.add_files('depprop.js', 'client')
+  api.add_files('depprop.js')
 })
 
 Package.on_test(function(api) {

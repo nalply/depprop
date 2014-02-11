@@ -3,7 +3,7 @@
   "description": "Dependent JavaScript Properties",
   "author": "Daniel Ly",
   "homepage": "https://github.com/nalply/depprop",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "git": "https://github.com/nalply/depprop.git",
   "packages": {}
 }
