@@ -47,11 +47,11 @@ Note that the autorun has not been rerun.
 ###Different reactive prefix
 
 You can use a different prefix by passing an object as a third parameter to
-`defineDepProperty()` with an option `reactivePrefix`.
+`defineDepProperty()` with an option `prefix`.
 
 Example
 
-    defineDepProperty(obj, 'c', {reactivePrefix: 'reactive_'})
+    defineDepProperty(obj, 'c', {prefix: 'reactive_'})
     obj.reactive_c = 'gamma'
 
 
