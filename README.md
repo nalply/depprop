@@ -55,14 +55,14 @@ Example
     obj.reactive_c = 'gamma'
 
 
-##Read-only getter
+##Getters
 
-Dependent properties internally use read-only getters. Because they are useful they are also included. You can give a value or a function to calculate a value on each get.
+Dependent properties internally use getters. Because they are useful they are also included. You can give a value or a function to calculate a value on each get. There is no setter, that means the property is read-only. In strict mode you get a type error if you try to assign a value. In non-strict mode the assignment is ignored. Once defined the getter cannot be redefined. This is a protection against accidental overwrites.
 
 Usage example:
 
     var obj = {}
-    Object.defineReadOnlyGetter(obj, 'tau', Math.PI * 2)
-    Object.defineReadOnlyGetter(obj, 'now', function() { return +new Date })
+    Object.defineGetter(obj, 'tau', Math.PI * 2)
+    Object.defineGetter(obj, 'now', function() { return +new Date })
     console.log(obj.tau) // 6.283185307179586
     console.log(obj.now) // The current time in ms since epoch
