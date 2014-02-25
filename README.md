@@ -2,7 +2,7 @@
 
 ###Status
 
-Beta. Tests not complete.
+Beta. Tests almost complete. Used in a project of mine.
 
 ###Introduction
 

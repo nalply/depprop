@@ -23,14 +23,14 @@ Object.defineGetter = function(obj, name, functionOrValue) {
 // Options
 //   enumerable: False to create a non-enumerable dependent property.
 //   configurable: False to create a non-configurable dependent property.
-//   reactivePrepend: False to create a sub-object to contain the reactive
+//   prepend: False to create a sub-object to contain the reactive
 //     property instead to prepend the prefix to the reactive property name.
-//   reactivePrefix: The prefix for reactive property names. Default is '$'.
+//   prefix: The prefix for reactive property names. Default is '$'.
 //   equals: Defines when to invalidate the dependents if the value has
 //     changed in an reactive assignment. 'strict' means: Don't invalidate
 //     if they are strictly equal. 'normal' if they are normally equal
 //     (equality operator ==). 'always' means invalidate always. A function is
-//     iused to determine equality and should return true if the old and new
+//     used to determine equality and should return true if the old and new
 //     value are considered to be equal and no invalidation should happen.
 //     Default is 'strict'.
 //   onGet: A callback with signature (reactive, value, object, name, options)
@@ -45,12 +45,13 @@ Object.defineGetter = function(obj, name, functionOrValue) {
 //     property values. Default is '!depPopertyStore'.
 Object.defineDepProperty = function(obj, name, options) {
   function noop() { return true }
+  function never() { return false }
 
   options = options || {}
   options.enumerable      = options.enumerable !== false 
   options.configurable    = options.configurable !== false
-  options.reactivePrepend = options.reactivePrepend !== false
-  options.reactivePrefix  = options.reactivePrefix || "$"
+  options.prepend         = options.prepend !== false
+  options.prefix          = options.prefix || "$"
   options.equals          = options.equals || 'strict'
   options.onGet           = options.onGet || noop
   options.onSet           = options.onSet || noop
@@ -61,11 +62,11 @@ Object.defineDepProperty = function(obj, name, options) {
   if (typeof equals != 'function') {
     if (equals == 'strict') equals = function(a, b) { return a === b }
     else if (equals == 'normal') equals = function(a, b) { return a == b }
-    else if (equals == 'always') equals = noop
+    else if (equals == 'always') equals = never
     else {
       console.warn("options.equals neither 'strict', 'normal', 'always' nor"
         + " a function. Disabling reactivity.")
-      equals = function() { return false }
+      equals = noop
     }
   }
 
@@ -99,9 +100,9 @@ Object.defineDepProperty = function(obj, name, options) {
 
   
   // Create property for reactive access
-  var prefix = options.reactivePrefix
-  if (!options.reactivePrepend) {
-    Object.defineGetter(obj, prefix, {})
+  var prefix = options.prefix
+  if (!options.prepend) {
+    if (!obj[prefix]) Object.defineGetter(obj, prefix, {})
     obj = obj[prefix]
     prefix = ''
   }
