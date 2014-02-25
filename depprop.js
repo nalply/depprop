@@ -1,6 +1,8 @@
+"use strict"
+
 // Define an enumerable read-only getter. The third parameter is either a
 // function delivering the value or the value itself.
-Object.defineReadOnlyGetter = function(obj, name, functionOrValue) {
+Object.defineGetter = function(obj, name, functionOrValue) {
   var descriptor = typeof functionOrValue == 'function'
     ? {get: functionOrValue, enumerable: true}
     : {value: functionOrValue, enumerable: true, writable: false}
@@ -69,7 +71,7 @@ Object.defineDepProperty = function(obj, name, options) {
 
   
   var storeKey = options.storeKey
-  if (!obj[storeKey]) Object.defineReadOnlyGetter(obj, storeKey, {})
+  if (!obj[storeKey]) Object.defineGetter(obj, storeKey, {})
   var store = obj[storeKey]
 
   if (store[name]) {
@@ -99,7 +101,7 @@ Object.defineDepProperty = function(obj, name, options) {
   // Create property for reactive access
   var prefix = options.reactivePrefix
   if (!options.reactivePrepend) {
-    Object.defineReadOnlyGetter(obj, prefix, {})
+    Object.defineGetter(obj, prefix, {})
     obj = obj[prefix]
     prefix = ''
   }

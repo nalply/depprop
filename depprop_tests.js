@@ -1,7 +1,7 @@
-Tinytest.add("defineReadOnlyGetter with value", function(test) {
+Tinytest.add("depprop - defineGetter with value", function(test) {
   var obj = {}
   var property = {}
-  Object.defineReadOnlyGetter(obj, 'test', property)
+  Object.defineGetter(obj, 'test', property)
   test.isTrue(obj.test === property, 'strict equality')
 
   test.equal(Object.getOwnPropertyDescriptor(obj, 'test'), {
@@ -13,11 +13,11 @@ Tinytest.add("defineReadOnlyGetter with value", function(test) {
 })
 
 
-Tinytest.add("defineReadOnlyGetter with function", function(test) {
+Tinytest.add("depprop - defineGetter with function", function(test) {
   var obj = {}
   var property = {}
   function getProperty() { return property }
-  Object.defineReadOnlyGetter(obj, 'test', getProperty)
+  Object.defineGetter(obj, 'test', getProperty)
   test.isTrue(obj.test === property, 'strict equality')
 
   var descriptor = Object.getOwnPropertyDescriptor(obj, 'test')
@@ -30,7 +30,7 @@ Tinytest.add("defineReadOnlyGetter with function", function(test) {
 })
 
 
-Tinytest.add("defineDepProperty", function(test) {
+Tinytest.add("depprop - defineDepProperty", function(test) {
   var obj = {}
   var property = {}
   Object.defineDepProperty(obj, 'test')
@@ -66,7 +66,7 @@ Tinytest.add("defineDepProperty", function(test) {
 })
 
 
-Tinytest.add("defineDepProperty context invalidation", function(test) {
+Tinytest.add("depprop - defineDepProperty context invalidation", function(test) {
   var obj = {}
   Object.defineDepProperty(obj, 'test')  
   
@@ -93,7 +93,7 @@ Tinytest.add("defineDepProperty context invalidation", function(test) {
 })
 
 
-Tinytest.add("defineDepProperty with options", function(test) {
+Tinytest.add("depprop - defineDepProperty with options", function(test) {
   test.fail({type: "todo"})
 })
 
